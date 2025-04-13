@@ -1,1 +1,1 @@
-##ai-notes
+##chippy-ai-notes
