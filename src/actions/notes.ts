@@ -2,7 +2,7 @@
 
 import { getUser } from "@/auth/server";
 import { handleError } from "@/lib/utils";
-import { prisma } from "@/db/prisma";
+import { prisma } from "@/prisma/prisma";
 import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
