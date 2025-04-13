@@ -34,7 +34,7 @@ export async function AppSidebar() {
             {user ? (
               <span>Your notes</span>
             ) : (
-              <p>
+              <p className="text-sm">
                 <Link href="/login">Login</Link> to see your notes
               </p>
             )}

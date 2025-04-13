@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import React, { Fragment, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
@@ -15,43 +15,54 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowUpIcon } from "lucide-react";
 import { askAIAboutNotesAction } from "@/actions/notes";
+import { toast } from "sonner";
 
 type Props = {
   user: User;
 };
 
 export function AskAIButton({ user }: Props) {
-  const router = useRouter();
-  const [open, setOpen] = useState<boolean>(false);
+  // const router = useRouter();
+  // const [open, setOpen] = useState<boolean>(false);
   const [questionText, setQuestionText] = useState<string>("");
   const [responses, setResponses] = useState<string[]>([]);
   const [questions, setQuestions] = useState<string[]>([]);
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const contentRef = React.useRef<HTMLDivElement>(null);
+  // const contentRef = React.useRef<HTMLDivElement>(null);
 
   const [isPending, startTransition] = React.useTransition();
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      handleSubmit();
+      handleSendQuestion();
     }
   };
 
-  const handleSubmit = async () => {
-    if (questionText.trim() === "") return;
-    const newQuestions = [...questions, questionText];
-    setQuestions(newQuestions);
+  const handleSendQuestion = async () => {
+    if (!questionText.trim()) return;
+
+    const newQuestion = questionText.trim();
+    setQuestions((prev) => [...prev, newQuestion]);
     setQuestionText("");
-    setTimeout(scrollToBottom, 100);
 
-    startTransition(async () => {
-      const response = await askAIAboutNotesAction(newQuestions, responses);
-      setResponses((prev) => [...prev, response]);
+    try {
+      const newQuestions = [...questions, newQuestion];
+      const { response, errorMessage } = await askAIAboutNotesAction(
+        newQuestions,
+        responses
+      );
 
-      setTimeout(scrollToBottom, 100);
-    });
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else if (response) {
+        setResponses((prev) => [...prev, response]);
+      }
+    } catch (error) {
+      toast.error("Failed to get a response");
+      console.error(error);
+    }
   };
 
   const handleInput = (): void => {
@@ -67,26 +78,26 @@ export function AskAIButton({ user }: Props) {
     }
   };
 
-  const scrollToBottom = (): void => {
-    contentRef.current?.scrollTo({
-      top: contentRef.current.scrollHeight,
-      behavior: "smooth",
-    });
-  };
+  // const scrollToBottom = (): void => {
+  //   contentRef.current?.scrollTo({
+  //     top: contentRef.current.scrollHeight,
+  //     behavior: "smooth",
+  //   });
+  // };
 
-  const handleOnOpenChange = (isOpen: boolean): void => {
-    if (!user) {
-      alert("Please log in to use this feature.");
-      router.push("/login");
-    } else {
-      if (isOpen) {
-        setQuestionText("");
-        setResponses([]);
-        setQuestions([]);
-      }
-      setOpen(isOpen);
-    }
-  };
+  // const handleOnOpenChange = (isOpen: boolean): void => {
+  //   if (!user) {
+  //     alert("Please log in to use this feature.");
+  //     router.push("/login");
+  //   } else {
+  //     if (isOpen) {
+  //       setQuestionText("");
+  //       setResponses([]);
+  //       setQuestions([]);
+  //     }
+  //     setOpen(isOpen);
+  //   }
+  // };
 
   return (
     <Dialog>

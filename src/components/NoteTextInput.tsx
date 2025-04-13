@@ -64,7 +64,7 @@ export const NoteTextInput = ({ noteId, startingNoteText }: Props) => {
       value={noteText}
       placeholder="Type your notes here.."
       onChange={handleUpdateNote}
-      className="min-h-[300px] resize-none focus:ring-1 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/20"
+      className="min-h-[300px] resize-none focus:ring-1 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/20 leading-7"
     />
   );
 };
