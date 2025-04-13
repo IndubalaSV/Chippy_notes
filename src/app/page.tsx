@@ -3,12 +3,18 @@ import { AskAIButton } from "@/components/AskAIButton";
 import { NewNoteButton } from "@/components/NewNoteButton";
 import { NoteTextInput } from "@/components/NoteTextInput";
 import { prisma } from "@/db/prisma";
+import { createClient } from "@/lib/supabase-server";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function Home({ searchParams }: Props) {
+  const supabase = createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   const user = await getUser();
   const noteIdParam = (await searchParams).noteId;
   const noteId = Array.isArray(noteIdParam)
