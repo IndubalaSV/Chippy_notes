@@ -5,6 +5,7 @@ import { handleError } from "@/lib/utils";
 import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Note } from "@prisma/client";
 
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
@@ -73,6 +74,10 @@ export const askAIAboutNotesAction = async (
       throw new Error("You must be logged in to ask questions");
     }
 
+    type NoteWithText = {
+      text: string;
+    };
+
     const notes = await prisma.note.findMany({
       where: { authorId: user.id },
       orderBy: { createdAt: "desc" },
@@ -83,7 +88,7 @@ export const askAIAboutNotesAction = async (
       return { response: "You don't have any notes yet", errorMessage: null };
     }
 
-    const notesText = notes.map((note) => note.text).join("\n\n");
+    const notesText = notes.map((note: NoteWithText) => note.text).join("\n\n");
     const latestQuestion = newQuestions[newQuestions.length - 1];
 
     // Create the model
