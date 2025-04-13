@@ -5,7 +5,6 @@ import { handleError } from "@/lib/utils";
 import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Note } from "@prisma/client";
 
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
