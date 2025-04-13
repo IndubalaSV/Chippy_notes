@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 import SidebarGroupContent from "./SidebarGroupContent";
 import Link from "next/link";
-import { prisma } from "@/prisma/prisma";
+import { prisma } from "../../prisma/prisma";
 import { Note } from "@prisma/client";
 
 export async function AppSidebar() {
